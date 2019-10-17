@@ -6,6 +6,8 @@ public class StateMachineModule : ModuleRules
 {
     public StateMachineModule(ReadOnlyTargetRules Target) : base(Target)
     {
+        PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+        bEnableExceptions = true;
         //Public module names that this module uses.
         //In case you would like to add various classes that you're going to use in your game
         //you should add the core,coreuobject and engine dependencies.
@@ -13,9 +15,17 @@ public class StateMachineModule : ModuleRules
         PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "GameStateMachine" });
 
         //The path for the header files
-        PublicIncludePaths.AddRange(new string[] { "StateMachineModule/Public" });
+        PublicIncludePaths.AddRange(new string[] { 
+            "StateMachineModule/Public",
+            "StateMachineModule/Public/Character",
+			"StateMachineModule/Public/Component"
+        });
 
         //The path for the source files
-        PrivateIncludePaths.AddRange(new string[] { "StateMachineModule/Private" });
+        PrivateIncludePaths.AddRange(new string[] { 
+            "StateMachineModule/Private",
+            "StateMachineModule/Public/Character",
+			"StateMachineModule/Public/Component"
+        });
     }
 }
