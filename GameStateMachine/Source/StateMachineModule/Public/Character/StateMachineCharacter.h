@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "SMMCommon.h"
+#include "CharacterTypeDefine.h"
 #include "StateMachineCharacter.generated.h"
-
 
 UCLASS()
 class STATEMACHINEMODULE_API AStateMachineCharacter : public ACharacter
@@ -74,15 +74,23 @@ public:
 	void SetCommandConversion(FName SourceCommand, FName TargetCommand, bool DelayExc = false, bool CacheEveryExecute = false);
 	UFUNCTION(BlueprintCallable)
 	void RemoveCommandConversion(FName SourceCommand, FName TargetCommand);
-
 	/*----------------------------------------------------------------------------------------------------------------------*/
+
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StateSys")
+	UAbilityStateSystem* AbilityStateSystem;*/
 
 private:
 	bool ApplyCommandConversion(const FName& CmdName, const FString& ParamSignature, const TArray<uint8>& Params);
 	bool DoCommandInternal(const FString& FuncSignature, const TArray<uint8>& Params);
 
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
+	TMap< ECharacterPlayerState, FCharacterStateMutexFlags > StateMutexConfig;
+
 private:
 	TMap<FName, TArray<CommandFunctionBase*> > CommandFunctions;
 
 	TArray<CommandConversion> CommandConversions;
+
+	TMap<int32, int8> StateMutex;
 };
