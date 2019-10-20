@@ -1,6 +1,6 @@
 #pragma once
 #include "CoreMinimal.h"
-
+#include "CharacterTypeDefine.generated.h"
 UENUM(BlueprintType)
 enum class ECharacterPlayerState : uint8
 {
@@ -38,11 +38,89 @@ enum class ECharacterPlayerState : uint8
 	ECharState_Skill_Special			UMETA(DisplayName = "Special"),    
 };
 
+
+UENUM(BlueprintType)
+enum class ECharStateTagType : uint8
+{
+	CharStateTag_None,
+	CharStateTag_Stand = 1,
+	CharStateTag_Dead = 2,
+	CharStateTag_Dying = 3,
+	CharStateTag_Crouch = 4,
+	CharStateTag_PGDown = 5,
+	CharStateTag_Falling = 6,
+	CharStateTag_FallingForward = 7,
+	CharStateTag_HeavyFalling = 8,
+	CharStateTag_Frozen = 9,
+	CharStateTag_Flying = 16,
+	CharStateTag_InAir = 17,	//在空中，Flying Falling HeavyFalling都会设置这个Tag
+
+	//攀爬状态定义
+	CharStateTag_Climbing = 10,
+	CharStateTag_ClimbOnLower = 11,
+	CharStateTag_ClimbOverLower = 12,
+	CharStateTag_ClimbOnHigher = 13,
+	CharStateTag_ClimbOverHigher = 14,
+	CharStateTag_DoubleJump = 15,
+
+	CharStateTag_SlowWalk = 20,
+	CharStateTag_Run,
+	CharStateTag_FastRun,
+	CharStateTag_NoMove,
+
+	CharStateTag_CameraDefault = 30,
+	CharStateTag_CameraAiming,
+	CharStateTag_CameraFarAiming,
+	CharStateTag_CameraFirstPerson,
+	CharStateTag_CameraFree,
+
+	CharStateTag_EquipMainWeapon = 40,
+	CharStateTag_EquipSubWeapon,
+	CharStateTag_EquipGrenade,
+	CharStateTag_EquipMedicine,
+	CharStateTag_NoHandWeaponIK,
+	//CharStateTag_PreGunFire,
+	CharStateTag_Guarding,
+	CharStateTag_Skill1 = 50						 UMETA(DisplayName = "BigStrongJump"),
+	CharStateTag_Skill2							 UMETA(DisplayName = "TuJinZhanDimianxuli"),
+	CharStateTag_Skill3							 UMETA(DisplayName = "SkillMaskFire"),
+	CharStateTag_Skill4							 UMETA(DisplayName = "TuJinZhanKongzhongxuli"),
+	CharStateTag_Skill5,
+	CharStateTag_Skill6,
+	CharStateTag_Skill7 = 56						 UMETA(DisplayName = "SkillShootComponentTag"),
+	CharStateTag_Skill8,
+	CharStateTag_Skill9,
+	CharStateTag_Skill10					     UMETA(DisplayName = "SkillNoHandIK"),
+	CharStateTag_HideToShow,
+	//CharStateTag_BigStrongAiming,
+	CharStateTag_HitFly_f,
+	CharStateTag_HitFly_b,
+	CharStateTag_HitBack_f,
+	CharStateTag_HitBack_b,
+	CharStateTag_HitNormal,
+	CharStateTag_HitRecover,	// 硬直
+	CharStateTag_SkillOneSection,
+	CharStateTag_SkillTwoSection,
+	CharStateTag_MeleeAttack = 70,
+	CharStateTag_Block,
+	CharStateTag_Unbeatable,
+	CharStateTag_HitBack_l,
+	CharStateTag_HitBack_r,
+
+	CharStateTag_Medicine1 = 90,
+	CharStateTag_Medicine2,
+	CharStateTag_Medicine3,
+	CharStateTag_Medicine4,
+	CharStateTag_Medicine5,
+};
+
+
 USTRUCT(BlueprintType)
 struct FCharacterStateMutexFlags
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 public:
 	UPROPERTY(EditDefaultsOnly)
 	TArray<ECharacterPlayerState> MutexList;
 };
+
