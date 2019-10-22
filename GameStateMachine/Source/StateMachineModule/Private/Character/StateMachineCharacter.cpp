@@ -1,14 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "StateMachineCharacter.h"
 
+FName AStateMachineCharacter::CharacterAbilityStateSystemName(TEXT("CharacterAbilityStateSystem"));
+
 // Sets default values
-AStateMachineCharacter::AStateMachineCharacter()
+AStateMachineCharacter::AStateMachineCharacter(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	AbilityStateSystem = ObjectInitializer.CreateDefaultSubobject<UAbilityStateSystem>(this, CharacterAbilityStateSystemName);
+	AbilityStateSystem->BindOwnerCharacter(this);
 }
 
 // Called when the game starts or when spawned
@@ -22,7 +24,7 @@ void AStateMachineCharacter::BeginPlay()
 void AStateMachineCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	AbilityStateSystem->Tick(DeltaTime);
 }
 
 // Called to bind functionality to input
@@ -30,6 +32,43 @@ void AStateMachineCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+bool AStateMachineCharacter::ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags)
+{
+	bool WroteSomething = false;
+
+	WroteSomething |= Super::ReplicateSubobjects(Channel,Bunch,RepFlags);
+	//TODO
+	//const TArray<UActorComponent*>& RepComponents = GetReplicatedComponents();
+	//for (UActorComponent* ActorComp : RepComponents)
+	//{
+	//	if (ActorComp && ActorComp->GetIsReplicated())
+	//	{
+	//		WroteSomething |= ActorComp->ReplicateSubobjects(Channel, Bunch, RepFlags);		// Lets the component add subobjects before replicating its own properties.
+	//		UGameCharacterAbilityComponent* AbilityComp = Cast<UGameCharacterAbilityComponent>(ActorComp);
+	//		if (AbilityComp)
+	//		{
+	//			AbilityComp->ReplicateSelf(Channel, Bunch, RepFlags);
+	//		}
+	//		else
+	//		{
+	//			WroteSomething |= Channel->ReplicateSubobject(ActorComp, *Bunch, *RepFlags);	// (this makes those subobjects 'supported', and from here on those objects may have reference replicated)		
+	//		}
+	//	}
+	//}
+	
+	//WroteSomething |= AbilityStateSystem->ReplicateSelf(Channel, Bunch, RepFlags);   //TODO
+
+	WroteSomething |= Channel->ReplicateSubobject(AbilityStateSystem, *Bunch, *RepFlags);
+
+	return WroteSomething;
+}
+
+void AStateMachineCharacter::MarkComponentsAsPendingKill()
+{
+	Super::MarkComponentsAsPendingKill();
+	AbilityStateSystem->MarkPendingKill();
 }
 
 bool AStateMachineCharacter::CharacterDoCommand(FName Cmd)
@@ -90,6 +129,37 @@ void AStateMachineCharacter::RemoveCommandConversion(FName SourceCommand, FName 
 			break;
 		}
 	}
+}
+
+bool AStateMachineCharacter::CheckStateMutex(int32 StateID)
+{
+	//TODO
+}
+
+void AStateMachineCharacter::UpdateStateMutex()
+{
+	//TODO
+}
+
+void AStateMachineCharacter::UpdateCurrentStateIDs()
+{
+	//TODO
+
+}
+
+const TArray<ECharacterPlayerState>* AStateMachineCharacter::GetMutexFlagByStateID(int32 StateID)
+{
+	//TODO
+}
+
+const TArray<ECharStateTagType>* AStateMachineCharacter::GetTagsByStateID(int32 StateID)
+{
+	//TODO
+}
+
+void AStateMachineCharacter::UpdateStateTags()
+{
+	//TODO
 }
 
 bool AStateMachineCharacter::ApplyCommandConversion(const FName& CmdName, const FString& ParamSignature, const TArray<uint8>& Params)

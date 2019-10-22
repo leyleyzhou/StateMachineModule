@@ -10,7 +10,7 @@ class STATEMACHINEMODULE_API USMMRepliactedObject :public UObject
 public:
 	USMMRepliactedObject(const FObjectInitializer& ObjectInitializer);
 
-
+	bool ReplicateSelf(UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags);
 // --------------------------------------
 //	UObject overrides
 // --------------------------------------

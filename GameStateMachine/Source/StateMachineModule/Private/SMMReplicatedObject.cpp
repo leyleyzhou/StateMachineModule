@@ -8,6 +8,18 @@ USMMRepliactedObject::USMMRepliactedObject(const FObjectInitializer& ObjectIniti
 
 }
 
+bool USMMRepliactedObject::ReplicateSelf(UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags)
+{
+	bool WroteSomething = false;
+	//if (IsRepPropertyDirty(Channel))
+	//{
+	//	WroteSomething = Channel->ReplicateSubobject(this, *Bunch, *RepFlags);
+	//	ClearRepPropertyDirty(Channel);
+	//}
+	//TODO
+	return WroteSomething;
+}
+
 int32 USMMRepliactedObject::GetFunctionCallspace(UFunction* Function, FFrame* Stack)
 {
 	if (HasAnyFlags(RF_ClassDefaultObject) || !IsSupportedForNetworking())

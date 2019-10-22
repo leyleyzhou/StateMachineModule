@@ -31,6 +31,7 @@ enum EAbilityStateGroup
 	EAbilityStateGroup_AttachState,  //(在现有状态机组基础上 + 附加物改变状态组):::用于做附加物增加状态互斥 标签 或者UI 互斥状态 等等 by_zhoulei 
 };
 
+/*----------------------------------------------------------------------------------------------------------------------*/
 class STATEMACHINEMODULE_API AbilityStateBase
 {
 public:
@@ -82,7 +83,7 @@ protected:
 	EAbilityStatePriority StatePriority;
 };
 
-
+/*----------------------------------------------------------------------------------------------------------------------*/
 class STATEMACHINEMODULE_API AbilityStateMachine
 {
 public:
@@ -119,7 +120,7 @@ protected:
 	TMap<int32, AbilityStateBase*> StateMap;
 };
 
-
+/*----------------------------------------------------------------------------------------------------------------------*/
 UCLASS(BlueprintType)
 class STATEMACHINEMODULE_API UAbilityStateSystem : public USMMRepliactedObject
 {
@@ -129,6 +130,8 @@ public:
 	UAbilityStateSystem(const FObjectInitializer& ObjectInitializer);
 	virtual ~UAbilityStateSystem();
 
+	virtual void BindOwnerCharacter(class AStateMachineCharacter* OwnerActor);
+	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
 	virtual void RegisterState(AbilityStateBase* State);
@@ -149,10 +152,13 @@ public:
 	UFUNCTION()
 	void OnRep_CurrentStateIDs();
 
-	TArray<AbilityStateMachine*> StateList;
+	TArray<AbilityStateMachine*> StateMachineList;
 
 	UPROPERTY(ReplicatedUsing = OnRep_CurrentStateIDs)
 	TArray<int32> CurrentStateIDs;
 
 	TMap<int32, int8> MutexFlags;
+
+	UPROPERTY()
+	AStateMachineCharacter* OwnerCharacter;
 };

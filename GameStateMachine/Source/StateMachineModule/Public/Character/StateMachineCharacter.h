@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SMMCommon.h"
 #include "CharacterTypeDefine.h"
+#include "StateMachine.h"
 #include "StateMachineCharacter.generated.h"
 
 UCLASS()
@@ -15,8 +16,8 @@ class STATEMACHINEMODULE_API AStateMachineCharacter : public ACharacter
 
 public:
 	// Sets default values for this character's properties
-	AStateMachineCharacter();
-
+	AStateMachineCharacter(const FObjectInitializer& ObjectInitializer);
+	static FName CharacterAbilityStateSystemName;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -27,7 +28,10 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual bool ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 
+	/** Called to mark all components as pending kill when the actor is being destroyed */
+	virtual void MarkComponentsAsPendingKill() override;
 public:
 	//RegisterCommand   And  UnregisterCommand
 	template<typename Cls>
@@ -76,9 +80,21 @@ public:
 	void RemoveCommandConversion(FName SourceCommand, FName TargetCommand);
 	/*----------------------------------------------------------------------------------------------------------------------*/
 
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StateSys")
-	UAbilityStateSystem* AbilityStateSystem;*/
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StateSys")
+	UAbilityStateSystem* AbilityStateSystem;
+public:
+	//-----------------------------------------------------------------------------------------
+	//状态机相关API
+	//-----------------------------------------------------------------------------------------
+	UFUNCTION(BlueprintCallable)
+	virtual bool CheckStateMutex(int32 StateID);
+	virtual void UpdateStateMutex();
+	virtual void UpdateCurrentStateIDs();
+	//互斥
+	const TArray<ECharacterPlayerState>* GetMutexFlagByStateID(int32 StateID);
+	const TArray<ECharStateTagType>* GetTagsByStateID(int32 StateID);
+	//更新角色身上的特征标记
+	virtual void UpdateStateTags();
 private:
 	bool ApplyCommandConversion(const FName& CmdName, const FString& ParamSignature, const TArray<uint8>& Params);
 	bool DoCommandInternal(const FString& FuncSignature, const TArray<uint8>& Params);
