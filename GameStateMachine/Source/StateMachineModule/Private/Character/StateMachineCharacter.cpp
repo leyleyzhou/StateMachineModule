@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "StateMachineCharacter.h"
-
+#include "StateMachine.h"
+#include "Engine/ActorChannel.h"
 FName AStateMachineCharacter::CharacterAbilityStateSystemName(TEXT("CharacterAbilityStateSystem"));
 
 // Sets default values
@@ -134,6 +135,7 @@ void AStateMachineCharacter::RemoveCommandConversion(FName SourceCommand, FName 
 bool AStateMachineCharacter::CheckStateMutex(int32 StateID)
 {
 	//TODO
+	return false;
 }
 
 void AStateMachineCharacter::UpdateStateMutex()
@@ -150,10 +152,12 @@ void AStateMachineCharacter::UpdateCurrentStateIDs()
 const TArray<ECharacterPlayerState>* AStateMachineCharacter::GetMutexFlagByStateID(int32 StateID)
 {
 	//TODO
+	return nullptr;
 }
 
 const TArray<ECharStateTagType>* AStateMachineCharacter::GetTagsByStateID(int32 StateID)
 {
+	return nullptr;
 	//TODO
 }
 

@@ -6,9 +6,9 @@
 #include "GameFramework/Character.h"
 #include "SMMCommon.h"
 #include "CharacterTypeDefine.h"
-#include "StateMachine.h"
 #include "StateMachineCharacter.generated.h"
 
+class UAbilityStateSystem;
 UCLASS()
 class STATEMACHINEMODULE_API AStateMachineCharacter : public ACharacter
 {

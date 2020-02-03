@@ -1,5 +1,6 @@
 #include "StateMachine.h"
 #include "SMMCommon.h"
+#include "Net/UnrealNetwork.h"
 /*----------------------------------------------------------------------------------------------------------------------*/
 AbilityStateMachine::AbilityStateMachine(AStateMachineCharacter* InCharacter, EAbilityStateGroup InStateGroup)
 	: OwnerCharacter(InCharacter)
