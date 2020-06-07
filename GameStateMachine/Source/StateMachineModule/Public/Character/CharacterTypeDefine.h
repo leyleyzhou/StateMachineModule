@@ -124,3 +124,12 @@ public:
 	TArray<ECharacterPlayerState> MutexList;
 };
 
+
+USTRUCT(BlueprintType)
+struct FCharacterStateTags
+{
+	GENERATED_USTRUCT_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly)
+	TArray<ECharStateTagType> TagList;
+};

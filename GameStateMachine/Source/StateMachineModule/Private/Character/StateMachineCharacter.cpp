@@ -2,6 +2,7 @@
 #include "StateMachineCharacter.h"
 #include "StateMachine.h"
 #include "Engine/ActorChannel.h"
+#include "GameCharacterAbilityComp.h"
 FName AStateMachineCharacter::CharacterAbilityStateSystemName(TEXT("CharacterAbilityStateSystem"));
 
 // Sets default values
@@ -26,6 +27,8 @@ void AStateMachineCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	AbilityStateSystem->Tick(DeltaTime);
+	UpdateStateTags();
+	UpdateStateMutex();
 }
 
 // Called to bind functionality to input
@@ -134,36 +137,78 @@ void AStateMachineCharacter::RemoveCommandConversion(FName SourceCommand, FName 
 
 bool AStateMachineCharacter::CheckStateMutex(int32 StateID)
 {
-	//TODO
-	return false;
+	int8* MutexFlag = StateMutex.Find(StateID);
+	if (MutexFlag)
+	{
+		return (*MutexFlag > 0) ? true : false;
+	}
+
+	return true;
 }
 
 void AStateMachineCharacter::UpdateStateMutex()
 {
-	//TODO
+	StateMutex.Empty();
+	AbilityStateSystem->GetStateMutexFlags(StateMutex);
 }
 
 void AStateMachineCharacter::UpdateCurrentStateIDs()
 {
-	//TODO
+	CacheCurrentStateIDs.Empty();
 
+	for (int32 i = 0; i < AbilityStateSystem->StateMachineList.Num(); ++i)
+	{
+		CacheCurrentStateIDs.Push(AbilityStateSystem->StateMachineList[i]->GetStateID());
+	}
 }
 
 const TArray<ECharacterPlayerState>* AStateMachineCharacter::GetMutexFlagByStateID(int32 StateID)
 {
-	//TODO
+	const FCharacterStateMutexFlags* StateFlags = StateMutexConfig.Find((ECharacterPlayerState)StateID);
+	if (StateFlags)
+	{
+		return &StateFlags->MutexList;
+	}
+
 	return nullptr;
 }
 
 const TArray<ECharStateTagType>* AStateMachineCharacter::GetTagsByStateID(int32 StateID)
 {
+	const FCharacterStateTags* StateTags = StateTagConfig.Find((ECharacterPlayerState)StateID);
+	if (StateTags)
+	{
+		return &StateTags->TagList;
+	}
 	return nullptr;
-	//TODO
 }
 
 void AStateMachineCharacter::UpdateStateTags()
 {
-	//TODO
+	TSet<ECharStateTagType> NewTags;
+	AbilityStateSystem->GetStateTags(NewTags);
+
+	const TSet<UActorComponent*>& ChildComponents = GetComponents();
+	for (UActorComponent* ChildComponent : ChildComponents)
+	{
+		if (UGameCharacterAbilityComponent* AbilityComponent = Cast<UGameCharacterAbilityComponent>(ChildComponent))
+		{
+			AbilityComponent->GetStateTags(NewTags);
+		}
+	}
+
+	if (!LegacyCompareEqual(CurrentStateTags, NewTags))
+	{
+		CurrentStateTags = NewTags;
+	}
+
+}
+
+bool AStateMachineCharacter::CheckStateTag(ECharStateTagType InTag) const
+{
+	if (CurrentStateTags.Find(InTag) != nullptr)
+		return true;
+	return false;
 }
 
 bool AStateMachineCharacter::ApplyCommandConversion(const FName& CmdName, const FString& ParamSignature, const TArray<uint8>& Params)

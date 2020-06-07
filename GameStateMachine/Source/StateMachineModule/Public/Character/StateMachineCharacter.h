@@ -90,11 +90,15 @@ public:
 	virtual bool CheckStateMutex(int32 StateID);
 	virtual void UpdateStateMutex();
 	virtual void UpdateCurrentStateIDs();
-	//互斥
-	const TArray<ECharacterPlayerState>* GetMutexFlagByStateID(int32 StateID);
-	const TArray<ECharStateTagType>* GetTagsByStateID(int32 StateID);
+
 	//更新角色身上的特征标记
 	virtual void UpdateStateTags();
+	UFUNCTION(BlueprintCallable)
+	bool CheckStateTag(ECharStateTagType InTag) const;
+	
+	const TArray<ECharacterPlayerState>* GetMutexFlagByStateID(int32 StateID);
+	const TArray<ECharStateTagType>* GetTagsByStateID(int32 StateID);
+
 private:
 	bool ApplyCommandConversion(const FName& CmdName, const FString& ParamSignature, const TArray<uint8>& Params);
 	bool DoCommandInternal(const FString& FuncSignature, const TArray<uint8>& Params);
@@ -102,6 +106,15 @@ private:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
 	TMap< ECharacterPlayerState, FCharacterStateMutexFlags > StateMutexConfig;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
+	TMap<ECharacterPlayerState, FCharacterStateTags> StateTagConfig;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
+	TArray<int32> CacheCurrentStateIDs;
+	//根据状态机计算的角色状态标签
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
+	TSet<ECharStateTagType> CurrentStateTags;
 
 private:
 	TMap<FName, TArray<CommandFunctionBase*> > CommandFunctions;
