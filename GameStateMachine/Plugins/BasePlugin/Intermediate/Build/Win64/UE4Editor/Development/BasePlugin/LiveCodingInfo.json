@@ -1,0 +1,20 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.BasePlugin.cpp.obj": [
+			"BasePlugin.cpp.obj",
+			"BasePluginBPLibrary.cpp.obj",
+			"BaseWorldContext.cpp.obj",
+			"BaseDataTable.cpp.obj",
+			"BaseFile.cpp.obj",
+			"BaseInternational.cpp.obj",
+			"BaseJsonReader.cpp.obj",
+			"BaseJsonWriter.cpp.obj",
+			"BaseHttpClient.cpp.obj"
+		],
+		"Module.BasePlugin.gen.cpp.obj": [
+			"BasePlugin.init.gen.cpp.obj",
+			"BasePluginBPLibrary.gen.cpp.obj"
+		]
+	}
+}

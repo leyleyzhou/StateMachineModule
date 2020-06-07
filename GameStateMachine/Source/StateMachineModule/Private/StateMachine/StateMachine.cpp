@@ -1,6 +1,10 @@
 #include "StateMachine.h"
 #include "SMMCommon.h"
 #include "Net/UnrealNetwork.h"
+
+int32 CVar_AbilityStateMachine_Test = 0;
+static FAutoConsoleVariableRef CVar_AbilityStateMachineTest(TEXT("AbilityStateMachine.Test"),CVar_AbilityStateMachine_Test,TEXT(""),ECVF_Default);
+
 /*----------------------------------------------------------------------------------------------------------------------*/
 AbilityStateMachine::AbilityStateMachine(AStateMachineCharacter* InCharacter, EAbilityStateGroup InStateGroup)
 	: OwnerCharacter(InCharacter)
